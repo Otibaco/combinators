@@ -80,7 +80,7 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="grid grid-cols-5 sm:grid-cols-12 xs:grid-cols-3 gap-2 mb-8">
+      <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-12 gap-2 mb-8">
         {inputs.map((value, index) => {
           const count = occurrences[value] || 0;
           const borderColor =
@@ -94,7 +94,7 @@ export default function Home() {
             <input
               key={index}
               type="number"
-              className={`w-12 h-12 text-center border rounded-md dark:bg-gray-800 ${borderColor}`}
+              className={`w-full h-12 text-center border rounded-md dark:bg-gray-800 ${borderColor}`}
               value={value}
               onChange={(e) => handleInputChange(index, e.target.value)}
               placeholder="0"
@@ -138,9 +138,10 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="flex w-full">
-        <div className="w-3/4 h-full">
-          <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600 h-full">
+      <div className="flex flex-col lg:flex-row w-full">
+        {/* Result Table */}
+        <div className="w-full lg:w-3/4 mb-4 lg:mb-0 lg:mr-4 overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600">
             <thead>
               <tr>
                 <th
@@ -159,10 +160,10 @@ export default function Home() {
                     return (
                       <td
                         key={colIndex}
-                        className="border border-gray-300 dark:border-gray-600 text-center"
-                        style={{ width: "80px", height: "50px" }}
+                        className="border border-gray-300 dark:border-gray-600 text-center p-2 text-sm"
+                        style={{ minWidth: "40px" }}
                       >
-                        {value}
+                        {value || "-"}
                       </td>
                     );
                   })}
@@ -172,9 +173,10 @@ export default function Home() {
           </table>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-md shadow-md w-1/4 h-full">
+        {/* Occurrence Box */}
+        <div className="w-full lg:w-1/4 bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
           <h2 className="text-lg font-bold mb-2">Occurrences</h2>
-          <ul>
+          <ul className="text-sm">
             {Object.entries(occurrences)
               .filter(([_, count]) => count > 1)
               .map(([num, count]) => (
