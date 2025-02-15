@@ -10,6 +10,7 @@ export default function Home() {
   const [factor, setFactor] = useState(2);
   const [occurrences, setOccurrences] = useState({});
 
+  //theme here
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
@@ -22,47 +23,54 @@ export default function Home() {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
-  const handleInputChange = (index, value) => {
-    const newInputs = [...inputs];
-    newInputs[index] = value;
-    setInputs(newInputs);
-  };
-
-  const handleCalculate = () => {
-    const numArray = inputs.map((n) => parseInt(n)).filter((n) => !isNaN(n));
-    if (numArray.length < factor) {
-      alert(`Enter at least ${factor} valid numbers.`);
-      return;
-    }
-
-    const resultArray = [];
-    let sum = numArray.slice(0, factor).reduce((acc, val) => acc + val, 0);
-    resultArray.push(sum > 90 ? sum % 90 : sum);
-
-    for (let i = factor; i < numArray.length; i++) {
-      sum += numArray[i];
-      resultArray.push(sum > 90 ? sum % 90 : sum);
-    }
-
-    const newResults = Array(45).fill(0);
-    for (let i = 0; i < resultArray.length && i < 45; i++) {
-      newResults[i] = resultArray[i];
-    }
-    setResults(newResults);
-
-    const count = {};
-    numArray.forEach((n) => {
-      count[n] = (count[n] || 0) + 1;
-    });
-    setOccurrences(count);
-  };
-
-  const handleClear = () => {
-    setInputs(Array(45).fill(""));
-    setResults(Array(45).fill(0));
-    setOccurrences({});
-  };
-
+    // Function to handle input changes
+    const handleInputChange = (index, value) => {
+      const newInputs = [...inputs]; // Copy existing inputs
+      newInputs[index] = value; // Update specific input value
+      setInputs(newInputs); // Update state with new values
+    };
+  
+    // Function to perform the calculation based on user input
+    const handleCalculate = () => {
+      const numArray = inputs.map((n) => parseInt(n)).filter((n) => !isNaN(n)); // Convert inputs to numbers and filter out invalid values
+      if (numArray.length < factor) { // Check if enough numbers are entered
+        alert(`Enter at least ${factor} valid numbers.`);
+        return;
+      }
+  
+      const resultArray = []; // Array to store calculated results
+      let sum = numArray.slice(0, factor).reduce((acc, val) => acc + val, 0); // Initial sum of first 'factor' numbers
+      resultArray.push(sum > 90 ? sum % 90 : sum); // Apply modulo operation if sum is greater than 90
+  
+      for (let i = factor; i < numArray.length; i++) { // Iterate through remaining numbers
+        sum += numArray[i];
+        resultArray.push(sum > 90 ? sum % 90 : sum);
+      }
+  
+      const newResults = Array(45).fill(0); // Create an array of 45 elements initialized to 0
+      for (let i = 0; i < resultArray.length && i < 45; i++) {
+        newResults[i] = resultArray[i]; // Store results in new array
+      }
+      setResults(newResults); // Update state with calculated results
+  
+      const count = {}; // Object to track occurrences of numbers
+      numArray.forEach((n) => {
+        count[n] = (count[n] || 0) + 1; // Count how many times each number appears
+      });
+      setOccurrences(count); // Update state with occurrences
+    };
+  
+    // Function to clear all inputs and results
+    const handleClear = () => {
+      setInputs(Array(45).fill(""));  // Reset all input fields
+      setResults(Array(45).fill(0));  // Reset the results table
+      setOccurrences({});  // Reset occurrences
+    
+      // Force re-render by updating factor (this may help refresh the UI)
+      setFactor(2);
+    };
+    
+  // the shuffle function
   const handleShuffle = () => {
     const shuffledInputs = [...inputs].sort(() => Math.random() - 0.5);
     setInputs(shuffledInputs);
